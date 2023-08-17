@@ -16,3 +16,13 @@ function createTweet() {
         message
     };
 }
+function renderView(tweetView) {
+    let view = document.querySelector('#container-' + tweetView.id);
+    if (view) {
+        view.innerHTML = '';
+    }
+    else {
+        view = document.createElement('div');
+        view.id = 'container' + tweetView.id;
+    }
+}
