@@ -1,131 +1,132 @@
-//Crear unos tipos de datos y interfaces
-
 type Message = string;
 type Title = string;
 type Id = string;
 
-//Interface que tiene una propiedad id de TIPO Id y un message de TIPO Message
 interface Tweet {
-    id: Id,
-    message: Message
+    id: string;
+    message: Message;
 }
-
 interface TweetView {
-    id: Id,
+    id: string;
     tweets: Tweet[];
 }
 
 function createMainTweet(): TweetView {
-    const id = crypto.randomUUID();
-    const tweet = createTweet()
+    const id = crypto.randomUUID() as Id;
+    const tweet = createTweet();
+
+    console.log({ id });
 
     return {
         id,
-        tweets: [tweet]
-    }
+        tweets: [tweet],
+    };
 }
 
 function createTweet(): Tweet {
-    const id = crypto.randomUUID();
-    const message = '';
-
+    const tweetId = crypto.randomUUID();
+    const message = "";
     return {
-        id,
-        message
-    }
+        id: tweetId,
+        message,
+    };
 }
 
 function renderView(tweetView: TweetView) {
-    let view = document.querySelector('#container-' + tweetView.id)
+    let view: HTMLDivElement | null = document.querySelector(
+        "#container-" + tweetView.id
+    );
 
     if (view) {
-        view.innerHTML = ''
+        view.innerHTML = "";
     } else {
-        view = document.createElement('div');
-        view.id = 'container' + tweetView.id;
-        view.classList.add('mainContainer');
-        document.querySelector('#tweets')?.append(view);
+        view = document.createElement("div");
+        view.id = "container-" + tweetView.id;
+        view.classList.add("mainContainer");
+        document.querySelector("#tweets")?.append(view);
     }
 
     for (let i = 0; i < tweetView.tweets.length; i++) {
-        renderTweet(tweetView, view as HTMLDivElement, tweetView.tweets[i], i === tweetView.tweets.length - 1)
+        renderTweet(
+            tweetView,
+            view,
+            tweetView.tweets[i],
+            i === tweetView.tweets.length - 1
+        );
     }
-
-
-
 }
 
-function renderTweet(tweetView: TweetView, view: HTMLDivElement, tweet: Tweet, last: boolean) {
-    const tweetContainer = document.createElement('div');
-    tweetContainer.id = 'container-' + tweet.id;
-    tweetContainer.classList.add('tweetContainer');
+function renderTweet(
+    tweetView: TweetView,
+    view: HTMLDivElement,
+    tweet: Tweet,
+    last: boolean
+) {
+    const tweetContainer = document.createElement("div");
+    tweetContainer.id = "container-" + tweet.id;
+    tweetContainer.classList.add("tweetContainer");
 
-    const form = document.createElement('form');
-    form.id = 'form-' + tweet.id;
-    tweetContainer.appendChild(form)
+    const form = document.createElement("form");
+    form.id = "form-" + tweet.id;
+    tweetContainer.appendChild(form);
 
-    const countContainer = document.createElement('div');
-    countContainer.classList.add('countContainer');
-
-    const textarea = document.createElement('textarea');
-    textarea.id = 'textarea' + tweet.id;
+    const textarea: HTMLTextAreaElement = document.createElement("textarea");
+    textarea.id = "textarea" + tweet.id;
     textarea.value = tweet.message;
     textarea.maxLength = 250;
-    countContainer.textContent = textarea.value.length.toString() + '/250'
 
-    const buttonAddMore = document.createElement('button');
-    buttonAddMore.classList.add('button', 'buttonNew');
-    buttonAddMore.value = 'Add another tweets';
-    buttonAddMore.append(document.createTextNode('Add another tweet'))
+    const countContainer = document.createElement("div");
+    countContainer.classList.add("countContainer");
 
+    const buttonAddMore = document.createElement("button");
+    buttonAddMore.classList.add("button", "buttonNew");
+    buttonAddMore.value = "Add another tweet";
+    buttonAddMore.append(document.createTextNode("Add another tweet"));
 
-    //listeners
-    buttonAddMore.addEventListener('click', e => {
+    buttonAddMore.addEventListener("click", (e) => {
         e.preventDefault();
         const anotherTweet = createTweet();
         tweetView.tweets.push(anotherTweet);
-        renderView(tweetView)
-    })
+        renderView(tweetView);
+    });
 
-    textarea.addEventListener('input', e => {
+    textarea.addEventListener("input", (e: Event) => {
+        countContainer.textContent = textarea.value.length.toString() + "/250";
         const value = (e.target as HTMLTextAreaElement).value;
-        countContainer.textContent = value.length.toString() + "/250"
         updateTweet(tweetView, tweet, value);
-    })
+    });
 
-    form.append(textarea, countContainer)
-
+    form.append(textarea, countContainer);
     if (last) {
-        form.appendChild(buttonAddMore)
+        form.append(buttonAddMore);
     }
 
-    view.appendChild(tweetContainer)
+    view.append(tweetContainer);
 }
 
 function updateTweet(tweetView: TweetView, tweet: Tweet, value: Message) {
+    console.log(tweet);
     let ref: Tweet | null = null;
-
     for (let i = 0; i < tweetView.tweets.length; i++) {
         const t = tweetView.tweets[i];
-
         if (t.id === tweet.id) {
             ref = t;
+            break;
         }
-        if (ref) {
-            ref.message = value
-        }
+    }
+    if (ref) {
+        ref.message = value;
     }
 }
 
-const bNewTweet: HTMLButtonElement | null = document.querySelector('#bNewTweet');
-const tweetContainer = document.querySelector('#tweets');
+const bNewTweet: HTMLButtonElement | null =
+    document.querySelector("#bNewTweet");
+
+const tweetsContainer = document.querySelector("#tweets");
 const tweetsData: TweetView[] = [];
 
-bNewTweet?.addEventListener('click', e => {
+bNewTweet?.addEventListener("click", (e) => {
     e.preventDefault();
-    const newTweetView = createMainTweet();
-    renderView(newTweetView)
-})
-
-
-
+    const newTweet = createMainTweet();
+    renderView(newTweet);
+});
