@@ -73,4 +73,9 @@ function renderTweet(tweetView: TweetView, view: HTMLDivElement, tweet: Tweet) {
     buttonAddMore.classList.add('button', 'buttonNew');
     buttonAddMore.value = 'Add another tweets';
     buttonAddMore.append(document.createTextNode('Add another tweet'))
+
+    const countContainer = document.createElement('div');
+    countContainer.classList.add('countContainer');
+
+    form.append(textarea, countContainer)
 }
