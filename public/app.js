@@ -28,8 +28,8 @@ function renderView(tweetView) {
         view.classList.add('mainContainer');
         (_a = document.querySelector('#tweets')) === null || _a === void 0 ? void 0 : _a.append(view);
     }
-    for (const tweet of tweetView.tweets) {
-        //renderTweet
+    for (let i = 0; i < tweetView.tweets.length; i++) {
+        renderTweet(tweetView, view, tweetView.tweets[i], i === tweetView.tweets.length - 1);
     }
 }
 function renderTweet(tweetView, view, tweet, last) {
@@ -39,16 +39,17 @@ function renderTweet(tweetView, view, tweet, last) {
     const form = document.createElement('form');
     form.id = 'form-' + tweet.id;
     tweetContainer.appendChild(form);
+    const countContainer = document.createElement('div');
+    countContainer.classList.add('countContainer');
     const textarea = document.createElement('textarea');
     textarea.id = 'textarea' + tweet.id;
     textarea.value = tweet.message;
     textarea.maxLength = 250;
+    countContainer.textContent = textarea.value.length.toString() + '/250';
     const buttonAddMore = document.createElement('button');
     buttonAddMore.classList.add('button', 'buttonNew');
     buttonAddMore.value = 'Add another tweets';
     buttonAddMore.append(document.createTextNode('Add another tweet'));
-    const countContainer = document.createElement('div');
-    countContainer.classList.add('countContainer');
     //listeners
     buttonAddMore.addEventListener('click', e => {
         e.preventDefault();
@@ -79,3 +80,11 @@ function updateTweet(tweetView, tweet, value) {
         }
     }
 }
+const bNewTweet = document.querySelector('#bNewTweet');
+const tweetContainer = document.querySelector('#tweets');
+const tweetsData = [];
+bNewTweet === null || bNewTweet === void 0 ? void 0 : bNewTweet.addEventListener('click', e => {
+    e.preventDefault();
+    const newTweetView = createMainTweet();
+    renderView(newTweetView);
+});
