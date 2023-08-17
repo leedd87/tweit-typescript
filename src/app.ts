@@ -117,7 +117,7 @@ function updateTweet(tweetView: TweetView, tweet: Tweet, value: Message) {
     }
 }
 
-const bNewTweet: HTMLButtonElement = document.querySelector('#bNewTweet');
+const bNewTweet: HTMLButtonElement | null = document.querySelector('#bNewTweet');
 const tweetContainer = document.querySelector('#tweets');
 const tweetsData: TweetView[] = [];
 
